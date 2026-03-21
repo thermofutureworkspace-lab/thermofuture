@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-white text-stone-900 font-sans antialiased;
+    overflow-x: hidden;
+  }
+  img { display: block; }
+}
+
+@layer utilities {
+  .section-padding { @apply px-4 sm:px-6 lg:px-14 xl:px-20; }
+
+  /* Pulsante principale — arancione bruciato, non acceso */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-orange-700 hover:bg-orange-600
+           text-white font-bold px-6 py-3.5 rounded-sm text-sm
+           transition-all duration-200
+           hover:shadow-lg hover:shadow-orange-700/25
+           hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* Pulsante su sfondo scuro/colorato */
+  .btn-white {
+    @apply inline-flex items-center justify-center gap-2
+           bg-white hover:bg-orange-50
+           text-orange-700 font-bold px-6 py-3.5 rounded-sm text-sm
+           transition-all duration-200
+           hover:shadow-md hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .section-tag {
+    @apply inline-flex items-center gap-2 text-xs font-semibold text-orange-700 tracking-widest uppercase mb-4;
+  }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.3; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #fafafa; }
+::-webkit-scrollbar-thumb { background: #c2410c; border-radius: 2px; }
