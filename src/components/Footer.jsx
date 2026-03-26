@@ -61,6 +61,12 @@ export default function Footer() {
             <li><a href="/#projects" className="text-sm text-stone-400 hover:text-white transition-colors">Progetti realizzati</a></li>
             <li><a href="/#about" className="text-sm text-stone-400 hover:text-white transition-colors">Chi siamo</a></li>
             <li><a href="/#contacts" className="text-sm text-stone-400 hover:text-white transition-colors">Contatti</a></li>
+            <li>
+              <a href="https://ebay.us/m/bzefRF" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-[#e53238] hover:text-red-400 transition-colors font-medium">
+                🛒 Ricambi su eBay
+              </a>
+            </li>
             <li><Link to="/privacy-policy" className="text-sm text-stone-400 hover:text-white transition-colors">Privacy Policy</Link></li>
             <li><Link to="/cookie-policy" className="text-sm text-stone-400 hover:text-white transition-colors">Cookie Policy</Link></li>
           </ul>
@@ -69,18 +75,22 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h4 className="text-xs font-bold text-stone-500 uppercase tracking-widest mb-4">Contatti</h4>
-          <ul className="space-y-4">
+          <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-orange-700 mt-0.5 shrink-0" />
-              <span className="text-sm text-stone-400">Via L. Albenavolo, 81057 Teano (CE), Campania</span>
+              <span className="text-sm text-stone-400">Via L. Albenavolo, 81057 Teano (CE)</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-orange-700 shrink-0" />
-              <a href="tel:+393792064226" className="text-sm text-stone-400 hover:text-white transition-colors">379 206 4226</a>
+              <a href="tel:+393792064226" className="text-sm text-stone-400 hover:text-white transition-colors">379 206 4226 (Cell.)</a>
             </li>
             <li className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-stone-600 shrink-0" />
-              <span className="text-sm text-stone-500">366 290 9732 (Termoricambi)</span>
+              <Phone className="w-4 h-4 text-orange-700 shrink-0" />
+              <a href="tel:+393292197867" className="text-sm text-stone-400 hover:text-white transition-colors">329 219 7867 (Ufficio)</a>
+            </li>
+            <li className="flex items-center gap-3">
+              <Phone className="w-4 h-4 text-orange-700 shrink-0" />
+              <a href="tel:+390823657232" className="text-sm text-stone-400 hover:text-white transition-colors">0823 657232 (Ufficio)</a>
             </li>
           </ul>
         </div>

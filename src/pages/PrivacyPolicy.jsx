@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
               <strong>Termoricambi</strong><br />
               Via L. Albenavolo, 81057 Teano (CE)<br />
               P.IVA: 04694560618<br />
-              Telefono: 366 290 9732<br />
+              Telefono: 379 206 4226 · 329 219 7867 · 0823 657232<br />
               Email: info@thermofuture.it
             </p>
           </section>
@@ -85,7 +85,7 @@ export default function PrivacyPolicy() {
               <li>Proporre reclamo al Garante per la Protezione dei Dati Personali (www.garanteprivacy.it)</li>
             </ul>
             <p className="mt-3">
-              Per esercitare i propri diritti, contattare: <strong>info@thermofuture.it</strong> o al numero <strong>366 290 9732</strong>.
+              Per esercitare i propri diritti, contattare: <strong>info@thermofuture.eu</strong>, al numero <strong>329 219 7867</strong> oppure <strong>0823 657232</strong>.
             </p>
           </section>
 

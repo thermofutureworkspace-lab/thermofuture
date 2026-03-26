@@ -6,6 +6,7 @@ import Solutions from './components/Solutions'
 import Features from './components/Features'
 import About from './components/About'
 import Projects from './components/Projects'
+import EbayStrip from './components/EbayStrip'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
@@ -26,8 +27,9 @@ function HomePage() {
       <Solutions />
       <Features />
       <About />
-      <Projects />
-      <ContactSection />
+        <Projects />
+        <EbayStrip />
+        <ContactSection />
     </main>
   )
 }

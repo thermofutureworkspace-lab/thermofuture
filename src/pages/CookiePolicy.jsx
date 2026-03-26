@@ -133,7 +133,7 @@ export default function CookiePolicy() {
             <p>
               Per qualsiasi domanda relativa ai cookie o alla privacy contatta:<br />
               <strong>Termoricambi</strong> — Via L. Albenavolo, 81057 Teano (CE)<br />
-              P.IVA: 04694560618 · Tel: 366 290 9732
+              P.IVA: 04694560618 · Tel: 329 219 7867 · 0823 657232
             </p>
           </section>
 
