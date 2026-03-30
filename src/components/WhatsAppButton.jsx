@@ -1,7 +1,7 @@
 import { MessageCircle } from 'lucide-react'
 import { useState } from 'react'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
 
 export default function WhatsAppButton() {
   const [hovered, setHovered] = useState(false)

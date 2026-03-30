@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Phone, MapPin, Mail } from 'lucide-react'
 
-const WA = 'https://wa.me/393792064226'
+const WA = 'https://wa.me/393292197867'
 
 const services = [
   'Impianti Termoidraulici',
@@ -79,10 +79,6 @@ export default function Footer() {
             <li className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-orange-700 mt-0.5 shrink-0" />
               <span className="text-sm text-stone-400">Via L. Albenavolo, 81057 Teano (CE)</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-orange-700 shrink-0" />
-              <a href="tel:+393792064226" className="text-sm text-stone-400 hover:text-white transition-colors">379 206 4226 (Cell.)</a>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-orange-700 shrink-0" />

@@ -1,6 +1,6 @@
 import { ArrowRight, Zap, Layers, Sun, Droplets, Wind } from 'lucide-react'
 
-const WA_BASE = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20informazioni%20su%20'
+const WA_BASE = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20informazioni%20su%20'
 
 const categories = [
   {
@@ -17,7 +17,7 @@ const categories = [
     title: 'Impianti a Pavimento Riscaldato',
     description: 'Sistemi di riscaldamento radiante a pavimento per massima efficienza energetica e comfort termico in ogni ambiente.',
     wa: WA_BASE + 'impianti%20a%20pavimento%20riscaldato',
-    img: '/assets/proj-pellet.png',
+    img: '/assets/proj-floor.png',
   },
   {
     icon: Zap,

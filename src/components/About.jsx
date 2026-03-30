@@ -1,6 +1,6 @@
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20maggiori%20informazioni'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20maggiori%20informazioni'
 
 const points = [
   'Installatori certificati e qualificati',

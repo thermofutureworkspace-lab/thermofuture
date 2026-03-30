@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Menu, X, Phone } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import CallPicker from './CallPicker'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
 
 const navLinks = [
   { label: 'Servizi',   href: '/#services' },
@@ -58,13 +59,7 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-4">
-          <a href="tel:+393792064226"
-            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
-              transparent ? 'text-white/70 hover:text-white' : 'text-stone-500 hover:text-stone-900'
-            }`}>
-            <Phone className="w-4 h-4" />
-            379 206 4226
-          </a>
+          <CallPicker />
           <a href={WA} target="_blank" rel="noopener noreferrer"
             className="btn-primary text-sm">
             Preventivo gratuito
@@ -73,9 +68,7 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="lg:hidden flex items-center gap-3">
-          <a href="tel:+393792064226" className={`transition-colors ${transparent ? 'text-white/80' : 'text-stone-600'}`}>
-            <Phone className="w-5 h-5" />
-          </a>
+          <CallPicker />
           <button onClick={() => setOpen(!open)}
             className={`p-1 transition-colors ${transparent ? 'text-white' : 'text-stone-700'}`}>
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

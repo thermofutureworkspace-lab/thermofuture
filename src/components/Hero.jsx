@@ -1,6 +1,7 @@
-import { ArrowRight, ChevronDown, Phone } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+import CallPicker from './CallPicker'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20richiedere%20un%20preventivo%20gratuito'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20richiedere%20un%20preventivo%20gratuito'
 
 export default function Hero() {
   return (
@@ -38,11 +39,7 @@ export default function Hero() {
             Richiedi preventivo gratuito
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
-          <a href="tel:+393792064226"
-            className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/70 text-white font-semibold px-7 py-3.5 rounded-sm text-sm transition-all duration-200 hover:-translate-y-0.5">
-            <Phone className="w-4 h-4" />
-            379 206 4226
-          </a>
+          <CallPicker dark />
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6">

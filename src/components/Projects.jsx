@@ -1,6 +1,7 @@
-import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
+import { ArrowRight, MessageCircle } from 'lucide-react'
+import CallPicker from './CallPicker'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20ho%20visto%20i%20vostri%20lavori%20e%20vorrei%20un%20preventivo'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20ho%20visto%20i%20vostri%20lavori%20e%20vorrei%20un%20preventivo'
 
 const projects = [
   { img: '/assets/proj-solar-1.png',       category: 'Fotovoltaico',    title: 'Impianto fotovoltaico residenziale',          location: 'Teano, CE' },
@@ -96,11 +97,7 @@ export default function Projects() {
                 <MessageCircle className="w-4 h-4 text-orange-700" />
                 Scrivi su WhatsApp
               </a>
-              <a href="tel:+393792064226"
-                className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 text-white font-semibold px-6 py-3.5 rounded-sm text-sm transition-all duration-200 hover:-translate-y-0.5">
-                <Phone className="w-4 h-4" />
-                379 206 4226
-              </a>
+              <CallPicker dark />
             </div>
           </div>
         </div>

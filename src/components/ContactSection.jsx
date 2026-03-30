@@ -1,6 +1,6 @@
 import { MapPin, Phone, Clock, MessageCircle, Building2 } from 'lucide-react'
 
-const WA = 'https://wa.me/393792064226?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
+const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
 
 const contacts = [
   {
@@ -8,12 +8,6 @@ const contacts = [
     label: 'Sede',
     value: 'Via L. Albenavolo\n81057 Teano (CE), Campania',
     href: 'https://maps.google.com/?q=Via+L.+Albenavolo,+81057+Teano+CE',
-  },
-  {
-    icon: Phone,
-    label: 'Cellulare',
-    value: '379 206 4226',
-    href: 'tel:+393792064226',
   },
   {
     icon: Building2,
@@ -97,8 +91,7 @@ export default function ContactSection() {
             {/* Company info */}
             <div className="text-xs text-stone-400 border-t border-stone-200 pt-4 leading-relaxed">
               <strong className="text-stone-600">Termoricambi</strong> · Via L. Albenavolo, 81057 Teano (CE)<br />
-              P.IVA 04694560618 · Cell. 379 206 4226 · Ufficio 329 219 7867 · 0823 657232
-
+              P.IVA 04694560618 · Ufficio 329 219 7867 · 0823 657232
             </div>
           </div>
 
