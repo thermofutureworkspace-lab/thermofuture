@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
+import { Loader2 } from 'lucide-react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Solutions from './components/Solutions'
@@ -15,6 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import CookiePolicy from './pages/CookiePolicy'
 import Climatizzatori from './pages/Climatizzatori'
 import AirconPartnerBanner from './components/AirconPartnerBanner'
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -38,19 +40,35 @@ function HomePage() {
 }
 
 function Layout() {
+  const { pathname } = useLocation()
+  const hideChrome = pathname.startsWith('/nscostadmin')
+
   return (
     <>
       <ScrollToTop />
-      <Navbar />
+      {!hideChrome && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/climatizzatori" element={<Climatizzatori />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
+        <Route
+          path="/nscostadmin"
+          element={
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center bg-stone-100">
+                  <Loader2 className="w-8 h-8 text-orange-700 animate-spin" />
+                </div>
+              }>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
       </Routes>
-      <Footer />
-      <WhatsAppButton />
-      <CookieBanner />
+      {!hideChrome && <Footer />}
+      {!hideChrome && <WhatsAppButton />}
+      {!hideChrome && <CookieBanner />}
     </>
   )
 }

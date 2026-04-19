@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function validLead() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['firstName', 'lastName', 'phone', 'email', 'message', 'source', 'createdAt'])
+        && d.firstName is string && d.firstName.size() > 0 && d.firstName.size() <= 120
+        && d.lastName is string && d.lastName.size() > 0 && d.lastName.size() <= 120
+        && d.phone is string && d.phone.size() > 0 && d.phone.size() <= 40
+        && d.email is string && d.email.size() > 3 && d.email.size() <= 200
+        && d.message is string && d.message.size() <= 4000
+        && d.source == 'website'
+        && d.createdAt == request.time;
+    }
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'thermofuture.workspace@gmail.com';
+    }
+
+    /** Solo segna letto/non letto: i dati del lead restano identici. */
+    function leadImmutableFieldsMatch() {
+      let b = resource.data;
+      let a = request.resource.data;
+      return a.firstName == b.firstName
+        && a.lastName == b.lastName
+        && a.phone == b.phone
+        && a.email == b.email
+        && a.message == b.message
+        && a.source == b.source
+        && a.createdAt == b.createdAt;
+    }
+
+    function seenFieldsOk() {
+      let a = request.resource.data;
+      let b = resource.data;
+      return a.seen is bool
+        && (
+          !a.keys().hasAny(['seenAt'])
+          || a.seenAt == request.time
+          || (b.keys().hasAny(['seenAt']) && a.seenAt == b.seenAt)
+        );
+    }
+
+    match /leads/{leadId} {
+      allow create: if validLead();
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isAdmin()
+        && leadImmutableFieldsMatch()
+        && seenFieldsOk();
+    }
+  }
+}

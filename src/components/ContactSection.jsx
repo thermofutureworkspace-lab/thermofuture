@@ -1,4 +1,5 @@
 import { MapPin, Phone, Clock, MessageCircle, Building2 } from 'lucide-react'
+import LeadForm from './LeadForm'
 
 const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
 
@@ -52,6 +53,8 @@ export default function ContactSection() {
               Contattaci per un preventivo gratuito e senza impegno.
               Rispondiamo entro 24 ore, spesso in pochi minuti su WhatsApp.
             </p>
+
+            <LeadForm />
 
             {/* Contact cards grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
