@@ -1,7 +1,20 @@
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import CallPicker from './CallPicker'
+import { useCountUp } from '../hooks/useCountUp'
 
 const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20richiedere%20un%20preventivo%20gratuito'
+
+function AnimatedStat({ target, suffix, label }) {
+  const [ref, value] = useCountUp(target)
+  const display = `${Math.round(value)}${suffix}`
+
+  return (
+    <div ref={ref}>
+      <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums">{display}</div>
+      <div className="text-xs text-white/40 mt-1 uppercase tracking-wider">{label}</div>
+    </div>
+  )
+}
 
 export default function Hero() {
   return (
@@ -43,17 +56,10 @@ export default function Hero() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6">
-          {[
-            { value: '35+', label: 'Anni di esperienza' },
-            { value: '500+', label: 'Impianti installati' },
-            { value: '100%', label: 'Soddisfazione clienti' },
-            { value: '24h', label: 'Risposta garantita' },
-          ].map(s => (
-            <div key={s.label}>
-              <div className="text-2xl sm:text-3xl font-bold text-white">{s.value}</div>
-              <div className="text-xs text-white/40 mt-1 uppercase tracking-wider">{s.label}</div>
-            </div>
-          ))}
+          <AnimatedStat target={35} suffix="+" label="Anni di esperienza" />
+          <AnimatedStat target={500} suffix="+" label="Impianti installati" />
+          <AnimatedStat target={100} suffix="%" label="Soddisfazione clienti" />
+          <AnimatedStat target={24} suffix="h" label="Risposta garantita" />
         </div>
       </div>
 

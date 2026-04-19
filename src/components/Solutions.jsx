@@ -1,4 +1,5 @@
 import { ArrowRight, Zap, Layers, Sun, Droplets, Wind } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const WA_BASE = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20informazioni%20su%20'
 
@@ -42,6 +43,7 @@ const categories = [
     description: 'Installazione e assistenza di climatizzatori e pompe di calore di ultima generazione per riscaldamento e raffrescamento.',
     wa: WA_BASE + 'climatizzatori%20e%20pompe%20di%20calore',
     img: '/assets/proj-aircon.png',
+    href: '/climatizzatori',
   },
 ]
 
@@ -60,7 +62,8 @@ export default function Solutions() {
             Soluzioni per ogni esigenza
           </h2>
           <p className="mt-3 text-stone-500 text-base max-w-xl leading-relaxed">
-            Clicca sulla categoria per ricevere informazioni e un preventivo gratuito su WhatsApp.
+            Clicca sulla categoria: per la climatizzazione trovi i prodotti Aircon; per gli altri servizi,
+            informazioni e preventivo su WhatsApp.
           </p>
         </div>
 
@@ -81,16 +84,13 @@ export default function Solutions() {
 
 function ServiceCard({ c, tall }) {
   const Icon = c.icon
-  return (
-    <a href={c.wa} target="_blank" rel="noopener noreferrer"
-      className="group relative overflow-hidden rounded-sm block cursor-pointer">
+  const inner = (
+    <>
       <div className={`relative overflow-hidden ${tall ? 'aspect-[16/9] sm:aspect-[3/2]' : 'aspect-[4/3]'}`}>
         <img src={c.img} alt={c.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/50 to-stone-900/10" />
 
-        {/* Content */}
         <div className="absolute inset-0 p-6 flex flex-col justify-end">
           <div className="flex items-center gap-2 mb-2">
             <Icon className="w-4 h-4 text-orange-400" />
@@ -101,11 +101,26 @@ function ServiceCard({ c, tall }) {
             {c.description}
           </p>
           <div className="flex items-center gap-2 bg-orange-700 group-hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-sm w-fit transition-all duration-200 group-hover:shadow-lg group-hover:shadow-orange-700/25 group-hover:-translate-y-0.5">
-            Informazioni e preventivo
+            {c.href ? 'Vedi prodotti Aircon' : 'Informazioni e preventivo'}
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
       </div>
+    </>
+  )
+
+  if (c.href) {
+    return (
+      <Link to={c.href} className="group relative overflow-hidden rounded-sm block cursor-pointer">
+        {inner}
+      </Link>
+    )
+  }
+
+  return (
+    <a href={c.wa} target="_blank" rel="noopener noreferrer"
+      className="group relative overflow-hidden rounded-sm block cursor-pointer">
+      {inner}
     </a>
   )
 }

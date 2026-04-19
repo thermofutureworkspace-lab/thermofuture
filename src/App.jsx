@@ -13,6 +13,8 @@ import WhatsAppButton from './components/WhatsAppButton'
 import CookieBanner from './components/CookieBanner'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import CookiePolicy from './pages/CookiePolicy'
+import Climatizzatori from './pages/Climatizzatori'
+import AirconPartnerBanner from './components/AirconPartnerBanner'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -24,6 +26,7 @@ function HomePage() {
   return (
     <main>
       <Hero />
+      <AirconPartnerBanner />
       <Solutions />
       <Features />
       <About />
@@ -41,6 +44,7 @@ function Layout() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/climatizzatori" element={<Climatizzatori />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
       </Routes>
