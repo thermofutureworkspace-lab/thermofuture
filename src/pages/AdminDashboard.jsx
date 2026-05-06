@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   signInWithEmailAndPassword,
@@ -16,6 +16,10 @@ import {
   updateDoc,
   serverTimestamp,
   deleteField,
+  addDoc,
+  deleteDoc,
+  setDoc,
+  getDoc,
 } from 'firebase/firestore'
 import {
   RefreshCw,
@@ -28,6 +32,11 @@ import {
   Square,
   Volume2,
   VolumeX,
+  Video,
+  Megaphone,
+  Inbox,
+  Trash2,
+  Upload,
 } from 'lucide-react'
 import { getDb, getFirebaseAuth, getAllowedAdminEmail, isFirebaseConfigured } from '../lib/firebase'
 import {
@@ -35,8 +44,14 @@ import {
   isLeadSoundEnabled,
   setLeadSoundEnabled,
 } from '../lib/leadAlertSound'
+import {
+  isCloudinaryReady,
+  uploadVideoToCloudinary,
+  uploadImageToCloudinary,
+} from '../lib/cloudinary'
 
 const MAX_LEADS = 200
+const ADDRESS_LABEL = 'Viale Contrada Santa Reparata'
 
 function formatDate(ts) {
   if (!ts?.toDate) return '—'
@@ -81,6 +96,26 @@ export default function AdminDashboard() {
     typeof window !== 'undefined' ? isLeadSoundEnabled() : true
   )
   const [togglingId, setTogglingId] = useState(null)
+  const [activeTab, setActiveTab] = useState('leads')
+
+  const [videos, setVideos] = useState([])
+  const [videoTitle, setVideoTitle] = useState('')
+  const [videoFile, setVideoFile] = useState(null)
+  const [videoPublished, setVideoPublished] = useState(true)
+  const [videoBusy, setVideoBusy] = useState(false)
+  const [videoErr, setVideoErr] = useState('')
+  const [videoMsg, setVideoMsg] = useState('')
+
+  const [offerEnabled, setOfferEnabled] = useState(false)
+  const [offerTitle, setOfferTitle] = useState('')
+  const [offerDescription, setOfferDescription] = useState('')
+  const [offerImageUrl, setOfferImageUrl] = useState('')
+  const [offerImageFile, setOfferImageFile] = useState(null)
+  const [offerCtaText, setOfferCtaText] = useState('')
+  const [offerCtaUrl, setOfferCtaUrl] = useState('')
+  const [offerSaving, setOfferSaving] = useState(false)
+  const [offerImageUploading, setOfferImageUploading] = useState(false)
+  const [offerMessage, setOfferMessage] = useState('')
 
   /** Set di id già noti: dopo il primo snapshot serve a rilevare nuovi documenti in modo affidabile. */
   const knownLeadIdsRef = useRef(null)
@@ -234,6 +269,40 @@ export default function AdminDashboard() {
     return () => unsub()
   }, [user?.email])
 
+  useEffect(() => {
+    const db = getDb()
+    if (!db || !user?.email) {
+      setVideos([])
+      return
+    }
+    const q = query(collection(db, 'socialVideos'), orderBy('createdAt', 'desc'), limit(100))
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        setVideos(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+      },
+      (err) => setVideoErr(err.message || 'Errore lettura social videos')
+    )
+    return () => unsub()
+  }, [user?.email])
+
+  useEffect(() => {
+    const db = getDb()
+    if (!db || !user?.email) return
+    getDoc(doc(db, 'siteSettings', 'offerPopup'))
+      .then((snap) => {
+        if (!snap.exists()) return
+        const d = snap.data()
+        setOfferEnabled(Boolean(d.enabled))
+        setOfferTitle(d.title || '')
+        setOfferDescription(d.description || '')
+        setOfferImageUrl(d.imageUrl || '')
+        setOfferCtaText(d.ctaText || '')
+        setOfferCtaUrl(d.ctaUrl || '')
+      })
+      .catch(() => {})
+  }, [user?.email])
+
   async function handleLogin(e) {
     e.preventDefault()
     setLoginError('')
@@ -319,6 +388,118 @@ export default function AdminDashboard() {
     }
   }
 
+  async function handleVideoUpload(e) {
+    e.preventDefault()
+    setVideoErr('')
+    setVideoMsg('')
+    if (!videoFile) {
+      setVideoErr('Seleziona un file video.')
+      return
+    }
+    if (!isCloudinaryReady()) {
+      setVideoErr('Configura VITE_CLOUDINARY_UPLOAD_PRESET prima di caricare.')
+      return
+    }
+    const db = getDb()
+    if (!db) return
+    setVideoBusy(true)
+    try {
+      const uploaded = await uploadVideoToCloudinary(videoFile)
+      await addDoc(collection(db, 'socialVideos'), {
+        title: videoTitle.trim() || 'Video ThermoFuture',
+        videoUrl: uploaded.secure_url,
+        publicId: uploaded.public_id,
+        duration: uploaded.duration ?? 0,
+        bytes: uploaded.bytes ?? 0,
+        format: uploaded.format ?? '',
+        published: videoPublished,
+        createdAt: serverTimestamp(),
+      })
+      setVideoTitle('')
+      setVideoFile(null)
+      setVideoPublished(true)
+      setVideoMsg('Video caricato e pubblicato correttamente.')
+    } catch (err) {
+      setVideoErr(err.message || 'Upload fallito')
+    } finally {
+      setVideoBusy(false)
+    }
+  }
+
+  async function removeVideo(video) {
+    if (!confirm('Eliminare questo video dalla sezione Social?')) return
+    const db = getDb()
+    if (!db) return
+    try {
+      await deleteDoc(doc(db, 'socialVideos', video.id))
+      setVideoMsg('Video rimosso dalla sezione Social.')
+    } catch (err) {
+      setVideoErr(err.message || 'Eliminazione fallita')
+    }
+  }
+
+  async function saveOffer(e) {
+    e.preventDefault()
+    const db = getDb()
+    if (!db) return
+    setOfferSaving(true)
+    setOfferMessage('')
+    try {
+      await setDoc(
+        doc(db, 'siteSettings', 'offerPopup'),
+        {
+          enabled: offerEnabled,
+          title: offerTitle.trim(),
+          description: offerDescription.trim(),
+          imageUrl: offerImageUrl.trim(),
+          ctaText: offerCtaText.trim(),
+          ctaUrl: offerCtaUrl.trim(),
+          updatedAt: serverTimestamp(),
+          updatedBy: user?.email || '',
+        },
+        { merge: true }
+      )
+      setOfferMessage('Popup offerta salvato.')
+    } catch (err) {
+      setOfferMessage(`Errore salvataggio: ${err.message || 'riprova'}`)
+    } finally {
+      setOfferSaving(false)
+    }
+  }
+
+  async function uploadOfferImage(e) {
+    e.preventDefault()
+    if (!offerImageFile) {
+      setOfferMessage('Seleziona prima un file immagine.')
+      return
+    }
+    if (!isCloudinaryReady()) {
+      setOfferMessage('Cloudinary non configurato correttamente.')
+      return
+    }
+    setOfferImageUploading(true)
+    setOfferMessage('')
+    try {
+      const up = await uploadImageToCloudinary(offerImageFile)
+      setOfferImageUrl(up.secure_url || '')
+      setOfferImageFile(null)
+      setOfferMessage('Immagine popup caricata. Ora salva il popup.')
+    } catch (err) {
+      setOfferMessage(`Errore upload immagine: ${err.message || 'riprova'}`)
+    } finally {
+      setOfferImageUploading(false)
+    }
+  }
+
+  const tabs = useMemo(
+    () => [
+      { id: 'leads', label: 'Richieste', icon: Inbox },
+      { id: 'social', label: 'Social video', icon: Video },
+      { id: 'offer', label: 'Popup offerta', icon: Megaphone },
+    ],
+    []
+  )
+
   if (!isFirebaseConfigured()) {
     return (
       <main className="min-h-screen bg-stone-100 flex items-center justify-center p-6">
@@ -386,9 +567,9 @@ export default function AdminDashboard() {
       <header className="bg-white border-b border-stone-200 sticky top-0 z-20">
         <div className="section-padding max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4">
           <div>
-            <h1 className="font-display text-xl font-bold text-stone-900">Richieste preventivo</h1>
+            <h1 className="font-display text-xl font-bold text-stone-900">Dashboard Admin</h1>
             <p className="text-xs text-stone-500 mt-0.5">
-              {lastSync ? `Ultimo aggiornamento: ${lastSync.toLocaleTimeString('it-IT')}` : 'Caricamento…'}
+              {lastSync ? `Ultimo aggiornamento: ${lastSync.toLocaleTimeString('it-IT')}` : 'Caricamento…'} · {ADDRESS_LABEL}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -437,13 +618,33 @@ export default function AdminDashboard() {
       </header>
 
       <div className="section-padding max-w-6xl mx-auto pt-8">
-        <p className="text-sm text-stone-600 mb-6 max-w-2xl">
-          Elenco in <strong>tempo reale</strong>. Con ogni nuova richiesta:{' '}
-          <strong>popup in primo piano</strong> sulla dashboard, <strong>suono</strong> (se attivo),{' '}
-          <strong>titolo del tab</strong> che lampeggia, più — se attivi &quot;Notifiche sistema&quot; — un avviso nel{' '}
-          <strong>Centro notifiche</strong> di Windows/Mac (gratuito, senza email). L&apos;email automatica richiede
-          servizi/server a parte (es. Funzioni Firebase a consumo); qui restiamo su zero costi.
-        </p>
+        <div className="mb-5 flex flex-wrap gap-2">
+          {tabs.map((t) => {
+            const Icon = t.icon
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setActiveTab(t.id)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm text-sm font-semibold border ${
+                  activeTab === t.id
+                    ? 'bg-orange-700 text-white border-orange-700'
+                    : 'bg-white text-stone-700 border-stone-200 hover:border-orange-600'
+                }`}>
+                <Icon className="w-4 h-4" />
+                {t.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {activeTab === 'leads' && (
+          <p className="text-sm text-stone-600 mb-6 max-w-2xl">
+            Elenco in <strong>tempo reale</strong>. Con ogni nuova richiesta:{' '}
+            <strong>popup in primo piano</strong> sulla dashboard, <strong>suono</strong> (se attivo),{' '}
+            <strong>titolo del tab</strong> che lampeggia e notifica sistema.
+          </p>
+        )}
 
         {leadAlert && (
           <div
@@ -492,10 +693,10 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {leadsError && (
+        {leadsError && activeTab === 'leads' && (
           <div className="mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-sm px-4 py-3">{leadsError}</div>
         )}
-
+        {activeTab === 'leads' && (
         <div className="bg-white border border-stone-200 rounded-sm overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
@@ -568,6 +769,124 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
+        )}
+
+        {activeTab === 'social' && (
+          <div className="space-y-6">
+            <div className="bg-white border border-stone-200 rounded-sm shadow-sm p-6">
+              <h2 className="font-display text-2xl font-bold text-stone-900 mb-2">Carica video social</h2>
+              <p className="text-sm text-stone-500 mb-4">
+                Upload automatico su Cloudinary. Per sicurezza NON usiamo API secret nel client:
+                configura un preset unsigned in Cloudinary.
+              </p>
+              {!isCloudinaryReady() && (
+                <div className="mb-4 text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-sm p-3">
+                  Manca `VITE_CLOUDINARY_UPLOAD_PRESET` nelle variabili ambiente.
+                </div>
+              )}
+              <form onSubmit={handleVideoUpload} className="grid gap-4">
+                <input
+                  type="text"
+                  placeholder="Titolo video"
+                  value={videoTitle}
+                  onChange={(e) => setVideoTitle(e.target.value)}
+                  className="rounded-sm border border-stone-200 px-3 py-2.5"
+                />
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                  className="rounded-sm border border-stone-200 px-3 py-2.5"
+                />
+                <label className="inline-flex items-center gap-2 text-sm text-stone-700">
+                  <input type="checkbox" checked={videoPublished} onChange={(e) => setVideoPublished(e.target.checked)} />
+                  Pubblica subito nella sezione Social
+                </label>
+                {videoErr && <p className="text-sm text-red-700">{videoErr}</p>}
+                {videoMsg && <p className="text-sm text-green-700">{videoMsg}</p>}
+                <button type="submit" disabled={videoBusy} className="btn-primary w-fit">
+                  {videoBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  Carica video
+                </button>
+              </form>
+            </div>
+
+            <div className="bg-white border border-stone-200 rounded-sm overflow-hidden">
+              <div className="p-4 border-b border-stone-100 text-sm font-semibold text-stone-700">Video caricati</div>
+              <div className="divide-y divide-stone-100">
+                {videos.length === 0 ? (
+                  <p className="p-4 text-sm text-stone-500">Nessun video caricato.</p>
+                ) : (
+                  videos.map((v) => (
+                    <div key={v.id} className="p-4 flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-medium text-stone-900 truncate">{v.title || 'Video ThermoFuture'}</p>
+                        <p className="text-xs text-stone-500">{v.published === false ? 'Bozza' : 'Pubblicato'}</p>
+                      </div>
+                      <button type="button" onClick={() => removeVideo(v)} className="text-red-600 hover:text-red-700">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'offer' && (
+          <div className="bg-white border border-stone-200 rounded-sm shadow-sm p-6">
+            <h2 className="font-display text-2xl font-bold text-stone-900 mb-2">Popup offerta del momento</h2>
+            <p className="text-sm text-stone-500 mb-4">Configura il popup mostrato all'apertura del sito.</p>
+            <form onSubmit={saveOffer} className="grid gap-4">
+              <label className="inline-flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={offerEnabled} onChange={(e) => setOfferEnabled(e.target.checked)} />
+                Popup attivo
+              </label>
+              <input className="rounded-sm border border-stone-200 px-3 py-2.5" placeholder="Titolo" value={offerTitle} onChange={(e) => setOfferTitle(e.target.value)} />
+              <textarea className="rounded-sm border border-stone-200 px-3 py-2.5" rows={3} placeholder="Descrizione" value={offerDescription} onChange={(e) => setOfferDescription(e.target.value)} />
+              <div className="grid gap-2">
+                <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+                  Carica immagine popup (consigliato)
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setOfferImageFile(e.target.files?.[0] || null)}
+                    className="rounded-sm border border-stone-200 px-3 py-2.5 w-full"
+                  />
+                  <button
+                    type="button"
+                    onClick={uploadOfferImage}
+                    disabled={offerImageUploading}
+                    className="inline-flex items-center justify-center gap-2 border border-stone-200 rounded-sm px-4 py-2.5 text-sm font-semibold hover:border-orange-600 disabled:opacity-60"
+                  >
+                    {offerImageUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                    Carica immagine
+                  </button>
+                </div>
+              </div>
+              <input className="rounded-sm border border-stone-200 px-3 py-2.5" placeholder="URL immagine" value={offerImageUrl} onChange={(e) => setOfferImageUrl(e.target.value)} />
+              {offerImageUrl && (
+                <img
+                  src={offerImageUrl}
+                  alt="Anteprima popup"
+                  className="w-full max-w-xs rounded-sm border border-stone-200 object-cover"
+                />
+              )}
+              <div className="grid sm:grid-cols-2 gap-3">
+                <input className="rounded-sm border border-stone-200 px-3 py-2.5" placeholder="Testo bottone" value={offerCtaText} onChange={(e) => setOfferCtaText(e.target.value)} />
+                <input className="rounded-sm border border-stone-200 px-3 py-2.5" placeholder="URL bottone" value={offerCtaUrl} onChange={(e) => setOfferCtaUrl(e.target.value)} />
+              </div>
+              {offerMessage && <p className="text-sm text-stone-600">{offerMessage}</p>}
+              <button type="submit" disabled={offerSaving} className="btn-primary w-fit">
+                {offerSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Salva popup
+              </button>
+            </form>
+          </div>
+        )}
 
         <Link to="/" className="inline-block mt-8 text-sm text-stone-500 hover:text-orange-700">
           ← Torna al sito pubblico

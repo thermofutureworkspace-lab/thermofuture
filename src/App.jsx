@@ -7,11 +7,13 @@ import Solutions from './components/Solutions'
 import Features from './components/Features'
 import About from './components/About'
 import Projects from './components/Projects'
+import SocialSection from './components/SocialSection'
 import EbayStrip from './components/EbayStrip'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 import CookieBanner from './components/CookieBanner'
+import OfferPopup from './components/OfferPopup'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import CookiePolicy from './pages/CookiePolicy'
 import Climatizzatori from './pages/Climatizzatori'
@@ -27,14 +29,16 @@ function ScrollToTop() {
 function HomePage() {
   return (
     <main>
+      <OfferPopup />
       <Hero />
       <AirconPartnerBanner />
       <Solutions />
       <Features />
       <About />
-        <Projects />
-        <EbayStrip />
-        <ContactSection />
+      <Projects />
+      <SocialSection />
+      <EbayStrip />
+      <ContactSection />
     </main>
   )
 }

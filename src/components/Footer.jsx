@@ -78,7 +78,7 @@ export default function Footer() {
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-orange-700 mt-0.5 shrink-0" />
-              <span className="text-sm text-stone-400">Via L. Albenavolo, 81057 Teano (CE)</span>
+              <span className="text-sm text-stone-400">Viale Contrada Santa Reparata</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-orange-700 shrink-0" />
@@ -96,7 +96,7 @@ export default function Footer() {
       {/* Bottom */}
       <div className="border-t border-stone-800 py-5">
         <div className="section-padding max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-600">
-          <span>© 2026 Termoricambi · Via L. Albenavolo, 81057 Teano (CE) · P.IVA 04694560618</span>
+          <span>© 2026 ThermoFuture</span>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy" className="hover:text-stone-400 transition-colors">Privacy Policy</Link>
             <Link to="/cookie-policy" className="hover:text-stone-400 transition-colors">Cookie Policy</Link>

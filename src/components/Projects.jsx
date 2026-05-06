@@ -87,7 +87,7 @@ export default function Projects() {
               </h3>
               <p className="text-stone-300 text-sm leading-relaxed max-w-sm">
                 Sopralluogo gratuito e senza impegno a{' '}
-                <span className="text-white font-medium">Via L. Albenavolo, 81057 Teano (CE)</span>.
+                <span className="text-white font-medium">Viale Contrada Santa Reparata</span>.
                 Ti rispondiamo entro 24 ore.
               </p>
             </div>

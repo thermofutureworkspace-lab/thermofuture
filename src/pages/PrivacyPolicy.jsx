@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
             <p>
               Il titolare del trattamento dei dati personali è:<br />
               <strong>Termoricambi</strong><br />
-              Via L. Albenavolo, 81057 Teano (CE)<br />
+              Viale Contrada Santa Reparata<br />
               P.IVA: 04694560618<br />
               Telefono: 329 219 7867 · 0823 657232<br />
               Email: info@thermofuture.it

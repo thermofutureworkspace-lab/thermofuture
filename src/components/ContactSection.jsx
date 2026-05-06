@@ -2,13 +2,15 @@ import { MapPin, Phone, Clock, MessageCircle, Building2 } from 'lucide-react'
 import LeadForm from './LeadForm'
 
 const WA = 'https://wa.me/393292197867?text=Ciao,%20vorrei%20un%20preventivo%20gratuito'
+const ADDRESS_LABEL = 'Viale Contrada Santa Reparata'
+const ADDRESS_MAP = 'https://google.com/maps?q=41.255218505859375,14.060466766357422&z=17&hl=it'
 
 const contacts = [
   {
     icon: MapPin,
     label: 'Sede',
-    value: 'Via L. Albenavolo\n81057 Teano (CE), Campania',
-    href: 'https://maps.google.com/?q=Via+L.+Albenavolo,+81057+Teano+CE',
+    value: `${ADDRESS_LABEL}\nCampania`,
+    href: ADDRESS_MAP,
   },
   {
     icon: Building2,
@@ -91,19 +93,14 @@ export default function ContactSection() {
               Scrivici su WhatsApp — Preventivo gratuito
             </a>
 
-            {/* Company info */}
-            <div className="text-xs text-stone-400 border-t border-stone-200 pt-4 leading-relaxed">
-              <strong className="text-stone-600">Termoricambi</strong> · Via L. Albenavolo, 81057 Teano (CE)<br />
-              P.IVA 04694560618 · Ufficio 329 219 7867 · 0823 657232
-            </div>
           </div>
 
           {/* Map */}
           <div className="flex flex-col gap-3">
             <div className="rounded-sm overflow-hidden border border-stone-200 shadow-sm" style={{ height: '420px' }}>
               <iframe
-                title="ThermoFuture — Via L. Albenavolo, Teano CE"
-                src="https://maps.google.com/maps?q=Via+L.+Albenavolo,+81057+Teano+CE,+Italy&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                title="ThermoFuture — Viale Contrada Santa Reparata"
+                src="https://maps.google.com/maps?q=41.255218505859375,14.060466766357422&t=&z=17&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -112,7 +109,7 @@ export default function ContactSection() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <a href="https://maps.google.com/?q=Via+L.+Albenavolo,+81057+Teano+CE"
+            <a href={ADDRESS_MAP}
               target="_blank" rel="noopener noreferrer"
               className="btn-primary text-center text-sm w-full">
               Apri in Google Maps

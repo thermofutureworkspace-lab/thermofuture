@@ -132,7 +132,7 @@ export default function CookiePolicy() {
             <h2 className="text-lg font-bold text-stone-900 mb-3">6. Contatti</h2>
             <p>
               Per qualsiasi domanda relativa ai cookie o alla privacy contatta:<br />
-              <strong>Termoricambi</strong> — Via L. Albenavolo, 81057 Teano (CE)<br />
+              <strong>Termoricambi</strong> — Viale Contrada Santa Reparata<br />
               P.IVA: 04694560618 · Tel: 329 219 7867 · 0823 657232
             </p>
           </section>

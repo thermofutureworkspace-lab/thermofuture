@@ -51,5 +51,15 @@ service cloud.firestore {
         && leadImmutableFieldsMatch()
         && seenFieldsOk();
     }
+
+    match /socialVideos/{videoId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /siteSettings/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
   }
 }
